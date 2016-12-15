@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -9,15 +10,12 @@ import java.util.Scanner;
 public class Main {
 
     private int heapSize;
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         File file = new File("input.txt");
         Main main = new Main();
-        main.readFromFile(file);
+        RSHeap heap = new RSHeap(6, main.readFromFile(file));
+        heap.run();
     }
-
-
-
-
 
     private void toCSV() {
         PrintWriter pw = null;
@@ -31,15 +29,19 @@ public class Main {
         pw.close();
     }
 
-    private void readFromFile(File file) throws FileNotFoundException {
+    private int[] readFromFile(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter(",");
+        int[] toReturn = new int[12];
+        int i = 0;
         while(scanner.hasNext()){
             int number = scanner.nextInt();
             heapSize++;
             System.out.println(number + ", ");
+            toReturn[i] = number;
             //TODO: Add number to heap
-
+            i++;
         }
+        return toReturn;
     }
 }
