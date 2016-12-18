@@ -65,15 +65,32 @@ public class RSHeap {
         // Build the heap
         int i = 0;
         heapArray = new int[maxHeapSize+1];
-        int line = 0;
-        while(line < unsorted.length){                                              //Loop through all unsorted numbers
+        while(i < unsorted.length){                                              //Loop through all unsorted numbers
             if(amountOfNumbersInside < maxHeapSize && i != (unsorted.length)){     //There's still room in the heap
                 // && we're not at the last element
                 insertInHeap(unsorted[i]);
                 i++;
-                line++;
             } else {
-                line++; //just skip
+                //Now... We're at a full heap and need to remove one.
+                int minVal = removeMinFromHeap();
+                System.out.println("Writing minval " + minVal);
+                if(unsorted[i] > peekAtSmallest()){
+                    //Next incoming value is bigger than our smallest, so all is good
+                    insertInHeap(unsorted[i]);
+                    i++;
+                } else {
+                    maxHeapSize--;
+                    deadspace++;
+                    heapArray[maxHeapSize + 1] = unsorted[i]; //Insert into deadspace
+                    i++;
+                }
+            }
+            if(maxHeapSize == 0){
+                //The deadspace is now full. Time to sort it as a heap.
+                //Build a new heap in the deadSpace
+                maxHeapSize = deadspace;
+                deadspace = 0;
+                buildHeap();
             }
         }
         while(0 < amountOfNumbersInside){
@@ -84,14 +101,11 @@ public class RSHeap {
         return heapArray;
     }
 
-    private void writeOneOut() throws FileNotFoundException {
-        pw.write(heapArray[0] + ", ");
-        //Do i need to flush / close the writer here?
-        //I think i'll keep it active because i need to access it more often.
+    private int peekAtSmallest(){
+        return heapArray[1];
     }
-
     private void buildHeap() {
-        for (int i = maxHeapSize/2; i >= 0; i--) {
+        for (int i = maxHeapSize/2; i > 0; i--) {
             percolateDown(i);
         }
         System.out.println("Finished building");
@@ -134,7 +148,8 @@ public class RSHeap {
             heapArray[index] = leftChild;
         } else {
             //I'm at the last node. Remove
-            heapArray[index] = removeMaxFromHeap();
+            //TODO: This should NOT be here. Percolating down should stop now.
+//            heapArray[index] = removeMaxFromHeap();
         }
 
     }
