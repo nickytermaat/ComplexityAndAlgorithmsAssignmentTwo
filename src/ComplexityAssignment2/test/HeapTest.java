@@ -26,6 +26,7 @@ public class HeapTest {
         heap.addNumberToHeap(89);
         assertTrue(heap.isOrdered());
     }
+
     @Test
     public void isFull() throws Exception {
         heap.addNumberToHeap(12);

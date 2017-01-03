@@ -20,45 +20,52 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         assert HEAP_SIZE >= 1 : "Invalid heap size";
-
+        boolean exit = false;
         File file = new File("input.txt");
         Main main = new Main();
-        main.userInterface();
         Scanner scanner = new Scanner(System.in);
-        try {
-            int choice = scanner.nextInt();
-            assert choice == 1 || choice == 2 || choice == 3 : "Fill in a correct number";
-            switch (choice) {
-                case 1:
-                    System.out.println("* \t " + choice + " Run sorting algorithm");
-                    System.out.println("******************************************************");
-                    RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
-                    ArrayList<ArrayList<Integer>> output = heap.replacementSort();
-                    for (int i = 0; i < output.size(); i++) {
-                        System.out.printf("* \t Run " + (i + 1) + ": ");
-                        for (int j = 0; j < output.get(i).size(); j++) {
-                            System.out.printf(String.valueOf(output.get(i).get(j)) + " ");
+        while(!exit) {
+            main.userInterface();
+            try {
+                int choice = scanner.nextInt();
+                assert choice == 1 || choice == 2 || choice == 3 || choice == 9 : "Fill in a correct number";
+                switch (choice) {
+                    case 1:
+                        System.out.println("* \t " + choice + " Run sorting algorithm");
+                        System.out.println("******************************************************");
+                        RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
+                        ArrayList<ArrayList<Integer>> output = heap.replacementSort();
+                        for (int i = 0; i < output.size(); i++) {
+                            System.out.printf("* \t Run " + (i + 1) + ": ");
+                            for (int j = 0; j < output.get(i).size(); j++) {
+                                System.out.printf(String.valueOf(output.get(i).get(j)) + " ");
+                            }
+                            System.out.printf("\n");
                         }
-                        System.out.printf("\n");
-                    }
-                    break;
-                case 2:
-                    System.out.println("* \t " + choice + " Run tests");
-                    System.out.println("******************************************************");
+                        break;
+                    case 2:
+                        System.out.println("* \t " + choice + " Run tests");
+                        System.out.println("******************************************************");
 
-                    JUnitCore junit = new JUnitCore();
-                    Result resultHeap = junit.run(HeapTest.class);
-                    System.out.println("* \t Test Heap : \tFailure count \t" + resultHeap.getFailureCount());
-                    Result resultRSHeap = junit.run(HeapTest.class);
-                    System.out.println("* \t Test RSHeap : \tFailure count \t" + resultRSHeap.getFailureCount());
-                    break;
-                case 3:
-                    System.out.println("* \t " + choice + " Run with stats");
-                    System.out.println("******************************************************");
-                    main.runMultiplesorts(500000, 20);
+                        JUnitCore junit = new JUnitCore();
+                        Result resultHeap = junit.run(HeapTest.class);
+                        System.out.println("* \t Test Heap : \tFailure count \t" + resultHeap.getFailureCount());
+                        Result resultRSHeap = junit.run(HeapTest.class);
+                        System.out.println("* \t Test RSHeap : \tFailure count \t" + resultRSHeap.getFailureCount());
+                        break;
+                    case 3:
+                        System.out.println("* \t " + choice + " Run with stats");
+                        System.out.println("******************************************************");
+                        main.runMultiplesorts(500000, 20);
+                        break;
+                    case 9:
+                        exit = true;
+                        System.out.println("Bye bye.");
+                        break;
+                }
+            } catch (InputMismatchException ex) {
+                throw new InputMismatchException("Please, fill in a number");
             }
-        } catch (InputMismatchException ex) {
-            throw new InputMismatchException("Fill in a number");
         }
 
     }
@@ -69,6 +76,7 @@ public class Main {
         System.out.println("* \t Run sorting algorithm \t Press (1)");
         System.out.println("* \t Run tests \t\t\t\t Press (2)");
         System.out.println("* \t Run with stats  \t\t Press (3)");
+        System.out.println("* \t Exit   \t\t\t\t Press (9)");
         System.out.println("******************************************************");
     }
 

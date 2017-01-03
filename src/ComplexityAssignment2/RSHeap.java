@@ -60,10 +60,10 @@ public class RSHeap {
                 }
 
                 heap.setMaxHeapSize(heap.getDeadspace());                           //Preparing the heap for final run
+                heap.setFull();
                 heap.buildHeap();
                 if(heap.getMaxHeapSize() > 0){
                     newRun();
-                    heap.setFull();
                     writeHeapToOutput();
                 }
                 i++;                                                                //Terminate the loop
@@ -102,6 +102,6 @@ public class RSHeap {
         heap.buildHeap();
         assert heap.getMaxHeapSize() >= 0 : "Invalid maximum heapsize";
         assert heap.getDeadspace() == 0 : "Invalid deadspace size";
-        assert heap.isFull() : "ComplexityAssignment2.Heap not full";
+        assert heap.isFull() : "Heap not full";
     }
 }
