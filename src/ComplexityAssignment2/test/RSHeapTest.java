@@ -4,6 +4,8 @@ import ComplexityAssignment2.RSHeap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 /**
  * Created by Kris on 1/3/2017.
  */
@@ -22,6 +24,9 @@ public class RSHeapTest {
         * Removing an
         *
         */
-        rsHeap.replacementSort();
+        ArrayList<ArrayList<Integer>> output = rsHeap.replacementSort();
+//        for (int i = 0; i < ; i++) {
+            
+//        }
     }
 }

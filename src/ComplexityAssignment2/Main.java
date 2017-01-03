@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -70,10 +71,9 @@ public class Main {
      * @param file Reference to the file that should contain the input numbers
      * @return an array with all the numbers in the input file
      * @throws FileNotFoundException when the inputfile cannot be found
-     *                               <p>
-     *                               This function first reads the file into an arrayList of integers, then returns it as an array of integers.
-     *                               We're using an ArrayList because it grows on-demand and we don't have to declare the size beforehand.
-     *                               We then return it as a normal array because that's faster to work with in the ComplexityAssignment2.Heap class
+     * This function first reads the file into an arrayList of integers, then returns it as an array of integers.
+     * We're using an ArrayList because it grows on-demand and we don't have to declare the size beforehand.
+     * We then return it as a normal array because that's faster to work with in the ComplexityAssignment2.Heap class
      */
     private int[] readFromFile(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
@@ -94,5 +94,30 @@ public class Main {
         }
         return toReturn;
 
+    }
+
+    private void runMultiplesorts(int heapSize){
+        for (int j = 0; j < 10; j++) {
+
+            Random rand = new Random();
+            int amountNumbers = rand.nextInt(2000) + 20;
+            int[] numbers = new int[amountNumbers];
+            for (int i = 0; i < amountNumbers; i++) {
+                numbers[i] = rand.nextInt(2000) -100;
+            }
+            RSHeap heap = new RSHeap(heapSize, numbers);
+            ArrayList<ArrayList<Integer>> output = heap.replacementSort();
+            int runs = output.size();
+            int[] runsizes = new int[runs];
+            int sum = 0;
+            for (int i = 0; i < output.size(); i++) {
+                runsizes[i] = output.get(i).size();
+                sum += output.get(i).size();
+            }
+
+            double avg = (sum / runs);
+            System.out.println(amountNumbers + " numbers total");
+            System.out.println(runs + " runs, avg size of " + avg);
+        }
     }
 }
