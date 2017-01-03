@@ -27,7 +27,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         try {
             int choice = scanner.nextInt();
-            assert choice == 1 || choice == 2 : "Fill in a correct number";
+            assert choice == 1 || choice == 2 || choice == 3 : "Fill in a correct number";
             switch (choice) {
                 case 1:
                     System.out.println("* \t " + choice + " Run sorting algorithm");
@@ -41,7 +41,6 @@ public class Main {
                         }
                         System.out.printf("\n");
                     }
-                    main.runMultiplesorts(500000, 20);
                     break;
                 case 2:
                     System.out.println("* \t " + choice + " Run tests");
@@ -49,10 +48,14 @@ public class Main {
 
                     JUnitCore junit = new JUnitCore();
                     Result resultHeap = junit.run(HeapTest.class);
-                    System.out.println("* \t Test Heap : Failure count \t" + resultHeap.getFailureCount());
+                    System.out.println("* \t Test Heap : \tFailure count \t" + resultHeap.getFailureCount());
                     Result resultRSHeap = junit.run(HeapTest.class);
-                    System.out.println("* \t Test RSHeap : Failure count \t" + resultRSHeap.getFailureCount());
+                    System.out.println("* \t Test RSHeap : \tFailure count \t" + resultRSHeap.getFailureCount());
                     break;
+                case 3:
+                    System.out.println("* \t " + choice + " Run with stats");
+                    System.out.println("******************************************************");
+                    main.runMultiplesorts(500000, 20);
             }
         } catch (InputMismatchException ex) {
             throw new InputMismatchException("Fill in a number");
@@ -64,7 +67,8 @@ public class Main {
     public void userInterface() {
         System.out.println("******************************************************");
         System.out.println("* \t Run sorting algorithm \t Press (1)");
-        System.out.println("* \t Run tests \t Press (2)");
+        System.out.println("* \t Run tests \t\t\t\t Press (2)");
+        System.out.println("* \t Run with stats  \t\t Press (3)");
         System.out.println("******************************************************");
     }
 
@@ -121,10 +125,13 @@ public class Main {
             double avg = (sum / runs);
             averageSize += avg;
         }
-        System.out.println("Expected runsize without RS: \t" + heapSize);
-        System.out.println("Average run size with RS: \t\t" + averageSize / 10);
+        System.out.println("* \t Amount of numbers: \t" + amountNumbers);
+        System.out.println("* \t Heap size: \t\t\t" + heapSize + "\n* ");
 
-        System.out.println("Expected amount of runs without RS: \t" + (amountNumbers / heapSize));
-        System.out.println("Average amount of runs with RS: \t\t" + averageRuns / 10);
+        System.out.println("* \t Expected run size without RS: \t" + heapSize );
+        System.out.println("* \t Average run size with RS: \t\t" + averageSize / 10 + "\n* ");
+
+        System.out.println("* \t Expected amount of runs without RS: \t" + (amountNumbers / heapSize));
+        System.out.println("* \t Average amount of runs with RS: \t\t" + averageRuns / 10);
     }
 }
