@@ -1,3 +1,6 @@
+package ComplexityAssignment2;
+
+import ComplexityAssignment2.test.HeapTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -5,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -19,7 +23,7 @@ public class Main {
         File file = new File("input.txt");
         Main main = new Main();
         main.userInterface();
-        // Ask to run test or actual sorting alogrithm
+        // Ask to run ComplexityAssignment2.test or actual sorting alogrithm
         // Ask for numbers as input or from file
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
@@ -43,9 +47,9 @@ public class Main {
 
                 JUnitCore junit = new JUnitCore();
                 Result resultHeap = junit.run(HeapTest.class);
-                System.out.println("* \t Test Heap : Failure count \t" + resultHeap.getFailureCount() );
+                System.out.println("* \t Test ComplexityAssignment2.Heap : Failure count \t" + resultHeap.getFailureCount() );
                 Result resultRSHeap = junit.run(HeapTest.class);
-                System.out.println("* \t Test RSHeap : Failure count \t" + resultRSHeap.getFailureCount() );
+                System.out.println("* \t Test ComplexityAssignment2.RSHeap : Failure count \t" + resultRSHeap.getFailureCount() );
                 break;
         }
 
@@ -66,15 +70,19 @@ public class Main {
      *                               <p>
      *                               This function first reads the file into an arrayList of integers, then returns it as an array of integers.
      *                               We're using an ArrayList because it grows on-demand and we don't have to declare the size beforehand.
-     *                               We then return it as a normal array because that's faster to work with in the Heap class
+     *                               We then return it as a normal array because that's faster to work with in the ComplexityAssignment2.Heap class
      */
     private int[] readFromFile(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter(",");
         ArrayList<Integer> numbers = new ArrayList<>();
         while (scanner.hasNext()) {
-            int number = scanner.nextInt();
-            numbers.add(number);
+            try{
+                int number = scanner.nextInt();
+                numbers.add(number);
+            } catch (InputMismatchException IME){
+                System.err.println("Invalid input on " + scanner.next());
+            }
         }
 
         int[] toReturn = new int[numbers.size()];

@@ -1,9 +1,10 @@
-import java.io.IOException;
+package ComplexityAssignment2;
+
 import java.util.ArrayList;
 
 /**
- * The RSHeap class is used for Replacement Selecting numbers
- * It uses the Heap class for the heap operations
+ * The ComplexityAssignment2.RSHeap class is used for Replacement Selecting numbers
+ * It uses the ComplexityAssignment2.Heap class for the heap operations
  */
 public class RSHeap {
     private int[] unsorted;
@@ -11,7 +12,7 @@ public class RSHeap {
     private ArrayList<ArrayList<Integer>> output;
     private Heap heap;
 
-    RSHeap(int heapSize, int[] unsorted) {
+    public RSHeap(int heapSize, int[] unsorted) {
         assert heapSize <= unsorted.length : "Heapsize must be smaller than or equal to inputsize";
         assert unsorted.length != 1 : "Length is one, array already sorted";
 
@@ -28,7 +29,7 @@ public class RSHeap {
      * It takes all unsorted numbers, puts them in the heap and then starts working on the RS
      * @return an arraylist of lists. Each list represents a run and it contains the numbers of that run
      */
-    ArrayList<ArrayList<Integer>> replacementSort() {
+    public ArrayList<ArrayList<Integer>> replacementSort() {
         int i = 0;
         output.add(new ArrayList<>());
         while(i <= unsorted.length){                                                //Loop through all unsorted numbers
@@ -93,15 +94,14 @@ public class RSHeap {
      * This function is called when the array is filled with deadspace.
      * It takes all numbers in the deadspace and puts them in a heap.
      */
-    private void buildFromDeadspace() {
+    private void buildFromDeadspace() throws AssertionError {
         heap.setMaxHeapSize(heap.getDeadspace());                                    //Reset maxHeapSize
         heap.setDeadspace(0);                                                        //Reset deadspace size
         newRun();
         heap.setFull();                                                              //Indicate that the heap is full
         heap.buildHeap();
-
         assert heap.getMaxHeapSize() >= 0 : "Invalid maximum heapsize";
         assert heap.getDeadspace() == 0 : "Invalid deadspace size";
-        assert heap.isFull() : "Heap not full";
+        assert heap.isFull() : "ComplexityAssignment2.Heap not full";
     }
 }

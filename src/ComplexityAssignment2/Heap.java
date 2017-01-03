@@ -1,3 +1,5 @@
+package ComplexityAssignment2;
+
 /**
  * The datastructure which handles everything that
  */
@@ -7,7 +9,7 @@ public class Heap {
     private int amountOfNumbersInside = 0;
     private int deadspace = 0;
 
-    Heap(int maxHeapSize){
+    public Heap(int maxHeapSize){
         this.maxHeapSize = maxHeapSize;
         assert maxHeapSize >= 0 : "Invalid maximum heap size";
 
@@ -19,7 +21,7 @@ public class Heap {
      * Apply percolateDown repeatedly, starting at the last parent
      * O(1/2 N)
      */
-    void buildHeap() {
+    public void buildHeap() {
         for (int i = maxHeapSize /2; i > 0; i--) {
             percolateDown(i);
         }
@@ -29,7 +31,7 @@ public class Heap {
      * Remove the smallest element from the heap, found at the root of the heap
      * O(log N)
      */
-    int removeMinFromHeap(){
+    public int removeMinFromHeap(){
         int value = heapArray[1];                           //Store minValue in temporary value
         heapArray[1] = heapArray[amountOfNumbersInside];    //Set minValue to highest value in the heap
         amountOfNumbersInside-- ;                           //Reduce numbersInside by one
@@ -83,7 +85,7 @@ public class Heap {
     /**
      * The amount of numbers that is inside the heaparray is equal to the maximum heap size.
      */
-    boolean isFull(){
+    public boolean isFull(){
         assert amountOfNumbersInside >= 0 : "Invalid amount of numbers inside array";
         return amountOfNumbersInside == maxHeapSize;
     }
@@ -91,7 +93,7 @@ public class Heap {
     /**
      * If there is room in the heaparray add a number into the heaparray. Increase the amount of numbers that is in the heaparray.
      */
-    void addNumberToHeap(int number){
+    public void addNumberToHeap(int number){
         if(!isFull()){
             heapArray[amountOfNumbersInside + 1] = number;
             amountOfNumbersInside++;
@@ -102,22 +104,22 @@ public class Heap {
     /**
      * Add the number to the deadspace, decrease the maximum heapsize and increase the deadspace
      */
-    void addNumberToDeadspace(int number){
+    public void addNumberToDeadspace(int number){
         maxHeapSize--;
         deadspace++;
         heapArray[maxHeapSize + 1] = number;
     }
 
-    int getSmallest(){
+    public int getSmallest(){
         return heapArray[1];
     }
 
-    int getValue(int index){
+    public int getValue(int index){
         assert index >= 0 : "Invalid index";
         return heapArray[index];
     }
 
-    int getDeadspace() {
+    public int getDeadspace() {
         return deadspace;
     }
 
@@ -130,19 +132,19 @@ public class Heap {
         heapArray[index] = value;
     }
 
-    void setDeadspace(int deadspace) {
+    public void setDeadspace(int deadspace) {
         assert deadspace >= 0 : "Invalid deadspace size";
         this.deadspace = deadspace;
     }
 
-    int getMaxHeapSize() {
+    public int getMaxHeapSize() {
         return maxHeapSize;
     }
 
     /**
      * Set the amount of numbers inside to the maximum heapsize (which is the last size of the deadspace)
      */
-    void setFull() {
+    public void setFull() {
         this.amountOfNumbersInside = this.maxHeapSize;
     }
 
@@ -150,12 +152,12 @@ public class Heap {
         return amountOfNumbersInside;
     }
 
-    void setMaxHeapSize(int maxHeapSize) {
+    public void setMaxHeapSize(int maxHeapSize) {
         assert maxHeapSize >= 0 : "Invalid maximum heap size";
         this.maxHeapSize = maxHeapSize;
     }
 
-    boolean isOrdered(){
+    public boolean isOrdered(){
         for (int i = 1; i < amountOfNumbersInside; i++) {
             if((i * 2 ) + 1 <= amountOfNumbersInside) {
                 if (heapArray[i] > heapArray[(i * 2)] || heapArray[i] > heapArray[(i * 2) + 1]) {
