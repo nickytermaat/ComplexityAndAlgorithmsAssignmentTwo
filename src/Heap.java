@@ -14,7 +14,8 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * Apply percolateDown repeatedly, starting at the last parent
+     * O(1/2 N)
      */
     void buildHeap() {
         for (int i = maxHeapSize /2; i > 0; i--) {
@@ -23,7 +24,8 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * Remove the smallest element from the heap, found at the root of the heap
+     * O(log N)
      */
     int removeMinFromHeap(){
         int value = heapArray[1];                           //Store minValue in temporary value
@@ -34,7 +36,9 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * The value of each child node is greater than or equal to the value of its parent, with the minimum value at the root
+     * If not, percolateDown so the smallest child is switched with the current parent node.
+     * O(1)
      */
     private void percolateDown(int index){
         if((index * 2) + 1 <= amountOfNumbersInside){
@@ -44,7 +48,6 @@ public class Heap {
             int currentValue = heapArray[index];
             int smallestValue = Math.min(leftChildValue, rightChildValue);
             if(currentValue > smallestValue) {
-                //TODO: Check with which child to swap.
                 if(leftChildValue <= rightChildValue){
                     heapArray[(index * 2)] = currentValue;
                     heapArray[index] = leftChildValue;
@@ -65,14 +68,14 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * The amount of numbers that is inside the heaparray is equal to the maximum heap size.
      */
     boolean isFull(){
         return amountOfNumbersInside == maxHeapSize;
     }
 
     /**
-     * TODO: Documentation
+     * If there is room in the heaparray add a number into the heaparray. Increase the amount of numbers that is in the heaparray.
      */
     void addNumberToHeap(int number){
         if(!isFull()){
@@ -82,7 +85,7 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * Add the number to the deadspace, decrease the maximum heapsize and increase the deadspace
      */
     void addNumberToDeadspace(int number){
         heapArray[amountOfNumbersInside + 1] = number;
@@ -104,8 +107,8 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
-     * Explain why it's used
+     * Transform the values in deadspace to values in heaparray
+     * To create a heaparray with the deadspace values which then can be sorted again
      */
     void setValue(int index, int value){
         heapArray[index] = value;
@@ -120,7 +123,7 @@ public class Heap {
     }
 
     /**
-     * TODO: Documentation
+     * Set the amount of numbers inside to the maximum heapsize (which is the last size of the deadspace)
      */
     void setFull() {
         this.amountOfNumbersInside = this.maxHeapSize;
