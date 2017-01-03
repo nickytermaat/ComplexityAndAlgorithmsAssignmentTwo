@@ -20,10 +20,11 @@ public class Main {
         RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
         ArrayList<ArrayList<Integer>> output = heap.replacementSort();
         for (int i = 0; i < output.size(); i++) {
+            System.out.printf("Run " + ( i + 1 )+ ": ");
             for (int j = 0; j < output.get(i).size(); j++) {
                 System.out.printf(String.valueOf(output.get(i).get(j)) + " ");
             }
-            System.out.println("\n");
+            System.out.printf("\n");
         }
         //TODO: Pretty-print the output
     }
