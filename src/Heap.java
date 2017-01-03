@@ -67,6 +67,15 @@ public class Heap {
         }
     }
 
+    private void percolateUp(int index){
+        int parent = heapArray[index/2];
+        if(parent > heapArray[index] && index != 1){
+            heapArray[index / 2] = heapArray[index];
+            heapArray[index] = parent;
+            percolateUp(index / 2);
+        }
+    }
+
     /**
      * The amount of numbers that is inside the heaparray is equal to the maximum heap size.
      */
@@ -81,6 +90,7 @@ public class Heap {
         if(!isFull()){
             heapArray[amountOfNumbersInside + 1] = number;
             amountOfNumbersInside++;
+            percolateUp(amountOfNumbersInside);
         }
     }
 
@@ -137,4 +147,11 @@ public class Heap {
         this.maxHeapSize = maxHeapSize;
     }
 
+    public String toString(){
+        String toReturn = "";
+        for (int i = 0; i < heapArray.length; i++) {
+            toReturn += heapArray[i] + "\t";
+        }
+        return toReturn;
+    }
 }

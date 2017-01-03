@@ -43,7 +43,6 @@ public class RSHeap {
                 i++;
             }
             else if(i != unsorted.length){                                          //There are unsorted numbers left
-                heap.buildHeap();                                                   //Build the heap
                 output.get(runs).add(heap.removeMinFromHeap());                     //Removed smallest element
                 int nextNumber = unsorted[i];
                 i++;
