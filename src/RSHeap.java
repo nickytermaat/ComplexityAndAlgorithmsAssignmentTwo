@@ -11,18 +11,16 @@ public class RSHeap {
     private ArrayList<ArrayList<Integer>> output;
     private Heap heap;
 
-    RSHeap(int heapSize, int[] unsorted){
-        //TODO: Assert
-        int maxHeapSize;                                                            //HeapSize must be smaller than unsorted length
-        if(heapSize <= unsorted.length){
-            maxHeapSize = heapSize;
-        } else {
-            maxHeapSize = unsorted.length;
-        }
-        this.heap = new Heap(maxHeapSize);
+    RSHeap(int heapSize, int[] unsorted) throws IOException {
+        assert heapSize <= unsorted.length : "Heapsize must be smaller than or equal to inputsize";
+        assert unsorted.length != 1 : "Length is one, array already sorted";
+
+        this.heap = new Heap(heapSize);
         this.output = new ArrayList<>();
         this.unsorted = unsorted;
         this.runs = 0;
+
+        assert runs >= 0 : "Invalid runs amount";
     }
 
     /**
@@ -34,6 +32,8 @@ public class RSHeap {
         int i = 0;
         output.add(new ArrayList<>());
         while(i <= unsorted.length){                                                //Loop through all unsorted numbers
+            assert i >= 0 : "Invalid loopelement";
+            assert i <= unsorted.length : "Shouldn't be doing replacement sort";
             if(heap.getMaxHeapSize() == 0){                                         //IF the deadspace is full, use it to rebuild a heap
                 buildFromDeadspace();
             }
@@ -99,5 +99,9 @@ public class RSHeap {
         newRun();
         heap.setFull();                                                              //Indicate that the heap is full
         heap.buildHeap();
+
+        assert heap.getMaxHeapSize() >= 0 : "Invalid maximum heapsize";
+        assert heap.getDeadspace() == 0 : "Invalid deadspace size";
+        assert heap.isFull() : "Heap not full";
     }
 }

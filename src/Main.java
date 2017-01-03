@@ -8,15 +8,16 @@ import java.util.Scanner;
  * Created by Nicky on 01/12/2016.
  */
 public class Main {
-    private static int HEAP_SIZE = 10;
+    private static int HEAP_SIZE = 8;
 
     public static void main(String[] args) throws IOException {
-        //Assert heapsize >= 1
-        //TODO: User interface?
-        // Ask to run test or actual sorting alogrithm
-        // Ask for numbers as input or from file
+        assert HEAP_SIZE >= 1 : "Invalid heap size";
+
         File file = new File("input.txt");
         Main main = new Main();
+        main.userInterface();
+        // Ask to run test or actual sorting alogrithm
+        // Ask for numbers as input or from file
         RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
         ArrayList<ArrayList<Integer>> output = heap.replacementSort();
         for (int i = 0; i < output.size(); i++) {
@@ -27,6 +28,15 @@ public class Main {
             System.out.printf("\n");
         }
         //TODO: Pretty-print the output
+    }
+
+    public void userInterface() {
+        System.out.println("******************************************************");
+        System.out.println("* \t Run sorting algorithm \t Press (1)");
+        System.out.println("* \t Run tests \t Press (2)");
+        System.out.println("* \t Insert own numbers as input? \t Press (3)");
+        System.out.println("* \t Insert numbers from file \t Press (4)");
+        System.out.println("******************************************************");
     }
 
     /**

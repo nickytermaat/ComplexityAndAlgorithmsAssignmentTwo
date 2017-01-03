@@ -1,6 +1,5 @@
 /**
- * TODO: Explain why this class is used
- * Created by Kris on 1/3/2017.
+ * The datastructure which handles everything that
  */
 public class Heap {
     private int maxHeapSize = 0;
@@ -10,7 +9,10 @@ public class Heap {
 
     Heap(int maxHeapSize){
         this.maxHeapSize = maxHeapSize;
+        assert maxHeapSize >= 0 : "Invalid maximum heap size";
+
         this.heapArray = new int[maxHeapSize + 1];          //+1 because using a 1-based index is easier for finding children
+        assert heapArray.length != maxHeapSize : "Invalid array length";
     }
 
     /**
@@ -41,6 +43,7 @@ public class Heap {
      * O(1)
      */
     private void percolateDown(int index){
+        assert index >= 0 : "Invalid index";
         if((index * 2) + 1 <= amountOfNumbersInside){
             //RightChild exists. I'm checking with left.
             int leftChildValue = heapArray[(index * 2)];
@@ -80,6 +83,7 @@ public class Heap {
      * The amount of numbers that is inside the heaparray is equal to the maximum heap size.
      */
     boolean isFull(){
+        assert amountOfNumbersInside >= 0 : "Invalid amount of numbers inside array";
         return amountOfNumbersInside == maxHeapSize;
     }
 
