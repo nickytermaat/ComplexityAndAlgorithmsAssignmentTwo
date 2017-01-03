@@ -1,7 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 
 /**
  * Created by Kris on 12/7/2016.
@@ -12,58 +10,98 @@ public class RSHeap {
     private int[] unsorted;
     private int deadspace = 0;
     private int amountOfNumbersInside = 0;
-    private File out;
-    private PrintWriter pw;
     private int runs;
+    private ArrayList<ArrayList<Integer>> output;
 
     public RSHeap(int heapSize, int[] unsorted) throws IOException {
-        this.maxHeapSize = heapSize;
-        this.unsorted = unsorted;
-        this.out = new File("output.txt");
-        if(!out.exists()) {
-            out.createNewFile();
+        //HeapSize must be smaller than unsorted length
+        if(heapSize <= unsorted.length){
+            this.maxHeapSize = heapSize;
+        } else {
+            maxHeapSize = unsorted.length;
         }
-        this.pw = new PrintWriter(out);
+        this.output = new ArrayList<>();
+        this.unsorted = unsorted;
         this.runs = 0;
     }
-    // Percolate up:    1. add the element to the bottom level of the heap
-    //                  2. compare the added element with its parent; if they are in the correct order, stop
-    //                  3. if not, swap the element with its parent and return to the previous step.
 
-    // insert(element) - insert element into heap - O(log N)
-    // findMin - returns smallest element of a heap - O(1)
-    // deleteMin - removes smallest element from a heap - O(log N)
-
-    // In case of N alterning insertions and deletions: apply insert and deleteMin (of oder O(N log N)
-    // In case of N insertions before deletions: apply insert to each element (of order O(N log N)
-    // At the time of deletion the heap must be correct, not necessarily after each insertion
-
-    // buildHeap - percolateDown repeatedly from the rear (starting at the last parent)
-
-    public int[] run() {
+    public ArrayList<ArrayList<Integer>> run() {
         //Run through the unsorted array and insert the stuff into the heapArray where it's needed
         // Build the heap
         int i = 0;
+        output.add(new ArrayList<>());
         heapArray = new int[maxHeapSize+1];
-        while(i < unsorted.length){                                             //Loop through all unsorted numbers
-            if(amountOfNumbersInside < maxHeapSize && i != unsorted.length-1){                            //Add number to heap
+        while(i <= unsorted.length){                                             //Loop through all unsorted numbers
+            if(maxHeapSize == 0){               //IF the deadspace is full, use it to rebuild a heap
+                System.out.println("Rebuilding from deadspace");
+                maxHeapSize = deadspace;        //Reset maxHeapSize
+                deadspace = 0;                  //Reset deadspace size
+                runs++;                         //Keep track of amount of runs
+                output.add(new ArrayList<>());
+                //What to do with amountOfNumbersInside?
+                amountOfNumbersInside = maxHeapSize; //Indicate that the heap is full
+                buildHeap();
+            }
+            /*INITIAL RUN*/
+            if(amountOfNumbersInside < maxHeapSize //There's still room
+                    && i != unsorted.length-1){     //Check if we're at the last element
+                // Add number to heap
                 heapArray[amountOfNumbersInside + 1] = unsorted[i];
                 amountOfNumbersInside++;
                 i++;
-            } else {                                                            //Heap is full, now build it
+            }
+            /*END OF INITIAL RUN, NOW ReplacementSelecting*/
+            else if(i != unsorted.length){ //There are unsorted numbers left, so keep adding into the heap
+                //Heap is full, now build it
                 buildHeap();
-                //TODO: Delete smallest element
+                output.get(runs).add(removeMinFromHeap());                        //Removed smallest element
                 //TODO: Check if new element (unsorted[i]) should be placed in the heap or in the deadspace
-                //TODO: Put element where it belongs
+                int smallest = heapArray[1];
+                int nextNumber = unsorted[i];
+                i++;
+                if (amountOfNumbersInside > 0 && nextNumber >= smallest ) {
+                    //TODO: Insert into heap
+                    heapArray[amountOfNumbersInside + 1] = nextNumber;
+                    amountOfNumbersInside++;
+                } else {
+                    //TODO: Insert into deadspace
+                    heapArray[amountOfNumbersInside + 1] = nextNumber;
+                    deadspace++;
+                    maxHeapSize--;
+                }
+            } /*END OF ReplacementSelecting, cleaning heap */
+            else { //There are no unsorted numbers left, so delete everything from the heap.
+                //TODO: First, clean the rest of the heap
+                //Then, build a new heap from leftover deadspace
+                //Then clean heap again
+                //TODO: Make for-loop that loops through what's left
+                System.out.println("Cleaning heap..");
+                for (int j = 0; j < maxHeapSize; j++) {            //Cleaning the heap..
+                    output.get(runs).add(removeMinFromHeap());
+                }
+
+                System.out.println("Done cleaning, now clean deadspace!");
+
+                //Heap is empty
+                for (int j = 0; j < maxHeapSize; j++) {
+                    int temp = heapArray[(deadspace + maxHeapSize) - j];
+                    heapArray[j + 1] = temp;
+                }
+                maxHeapSize = deadspace;
+                buildHeap();
+                runs++;
+                output.add(new ArrayList<>());
+                amountOfNumbersInside = deadspace;
+                for (int j = 0; j < maxHeapSize; j++) {            //Cleaning the heap..
+                    output.get(runs).add(removeMinFromHeap());
+                }
+                //Amountofnumbersinside is nu 0
+                //MaxHeapSize mag nu
+                i++; //This is needed to stop the loop from running
             }
         }
-
-        while(maxHeapSize > 0){
-            System.out.println("Deleting " + removeMinFromHeap());
-            maxHeapSize--;
-        }
-        System.out.println("Done!");
-        return heapArray;
+        System.out.println("Done in " + runs + " runs!" );
+        return output;
     }
 
     private void buildHeap() {
@@ -73,17 +111,11 @@ public class RSHeap {
     }
 
     private int removeMinFromHeap(){
-        int value = heapArray[1];
-        heapArray[1] = heapArray[amountOfNumbersInside];
-        amountOfNumbersInside-- ;
-        percolateDown(1);
-        return value;
-    }
-
-    public int removeMaxFromHeap(){
-        int value = heapArray[amountOfNumbersInside];
-        heapArray[amountOfNumbersInside] = -1;
-        return value;
+        int value = heapArray[1];                           //Store minValue in temporary value
+        heapArray[1] = heapArray[amountOfNumbersInside];    //Set minValue to highest value in the heap
+        amountOfNumbersInside-- ;                           //Reduce numbersInside by one
+        percolateDown(1);                                   //Call recursive function percolateDown to set the new value on the right position
+        return value;                                       //Return the value that has been deleted
     }
 
     private void percolateDown(int index){
@@ -92,54 +124,28 @@ public class RSHeap {
         //Right child = (index * 2 ) +1
         if((index * 2) + 1 <= amountOfNumbersInside){
             //RightChild exists. I'm checking with left.
-            int leftChild = heapArray[(index * 2)];
-            int rightChild = heapArray[(index * 2) + 1];
-            if(leftChild <= rightChild){                        //The left child is smaller
-                heapArray[index * 2] = heapArray[index];
-                heapArray[index] = leftChild;
-                percolateDown(index * 2);
-            } else if (leftChild > rightChild){                 //The right child is smaller
-                heapArray[index * 2 + 1] = heapArray[index];
-                heapArray[index] = rightChild;
-                percolateDown(index * 2 + 1);
+            int leftChildValue = heapArray[(index * 2)];
+            int rightChildValue = heapArray[(index * 2) + 1];
+            int currentValue = heapArray[index];
+            int smallestValue = Math.min(leftChildValue, rightChildValue);
+            if(currentValue > smallestValue) {
+                //TODO: Check with which child to swap.
+                if(leftChildValue <= rightChildValue){
+                    heapArray[(index * 2)] = currentValue;
+                    heapArray[index] = leftChildValue;
+                    percolateDown((index * 2));
+                } else if(leftChildValue > rightChildValue){
+                    heapArray[(index * 2) + 1] = currentValue;
+                    heapArray[index] = rightChildValue;
+                    percolateDown((index * 2) + 1);
+                }
             }
         } else if((index * 2) == amountOfNumbersInside && heapArray[index * 2] < heapArray[index]) {
             //The LeftChild is the last child in the tree, swap
             int leftChild = heapArray[(index * 2)];
             heapArray[index * 2] = heapArray[index];
             heapArray[index] = leftChild;
-        }
-    }
-
-    private void insertInHeap(int number){
-        int insertAt = amountOfNumbersInside + 1;
-        if(insertAt <= maxHeapSize) {
-            if (amountOfNumbersInside == 0) {
-                heapArray[insertAt] = number;                              //0 can safely be set because it's the first element
-                amountOfNumbersInside++;
-            } else {                                                //Numbers already exist in the heap
-                int parentIndex = insertAt / 2;
-                int parent = heapArray[parentIndex];                //Integer division takes care of finding the proper parent
-                if (number < parent) {                                //If number < parent, then percolateUp
-                    percolateUp(number, insertAt);                             //We need to percolate up
-                } else {                                            //I'm bigger than my parent, can place here
-                    heapArray[insertAt] = number;
-                }
-                amountOfNumbersInside++;
-
-            }
-        }
-    }
-    private void percolateUp(int number, int index){
-        if(amountOfNumbersInside <= maxHeapSize){
-            int parent = heapArray[index / 2];                      //Swapping with parent
-            heapArray[index / 2] = number;
-            heapArray[index] = parent;
-            index = index/2;                                        //Swapped up, so my index became that of my parent
-            parent = heapArray[index / 2];
-            if(number < parent){
-                percolateUp(number, index);                         //Recursive call to keep percolating until i'm in position
-            }
+            //Don't need to percolate again, because this is a last child.
         }
     }
 }
