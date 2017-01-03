@@ -60,9 +60,11 @@ public class RSHeap {
 
                 heap.setMaxHeapSize(heap.getDeadspace());                           //Preparing the heap for final run
                 heap.buildHeap();
-                newRun();
-                heap.setFull();
-                writeHeapToOutput();
+                if(heap.getMaxHeapSize() > 0){
+                    newRun();
+                    heap.setFull();
+                    writeHeapToOutput();
+                }
                 i++;                                                                //Terminate the loop
             }
         }
@@ -98,5 +100,4 @@ public class RSHeap {
         heap.setFull();                                                              //Indicate that the heap is full
         heap.buildHeap();
     }
-
 }
