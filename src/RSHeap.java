@@ -2,7 +2,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * TODO: Documentation
+ * The RSHeap class is used for Replacement Selecting numbers
+ * It uses the Heap class for the heap operations
  */
 public class RSHeap {
     private int[] unsorted;
@@ -25,17 +26,18 @@ public class RSHeap {
     }
 
     /**
-     * TODO: Documentation
-     * @return
+     * This function does the actual replacement sorting.
+     * It takes all unsorted numbers, puts them in the heap and then starts working on the RS
+     * @return an arraylist of lists. Each list represents a run and it contains the numbers of that run
      */
-    ArrayList<ArrayList<Integer>> run() {
+    ArrayList<ArrayList<Integer>> replacementSort() {
         int i = 0;
         output.add(new ArrayList<>());
         while(i <= unsorted.length){                                                //Loop through all unsorted numbers
             if(heap.getMaxHeapSize() == 0){                                         //IF the deadspace is full, use it to rebuild a heap
                 buildFromDeadspace();
             }
-            if( !heap.isFull()                                                      //There's still room in the heaparray
+            if( !heap.isFull()                                                      //There's still room in the HeapArray
                     && i != unsorted.length-1){                                     //Check if we're at the last element
                 heap.addNumberToHeap(unsorted[i]);
                 i++;
@@ -65,12 +67,11 @@ public class RSHeap {
                 i++;                                                                //Terminate the loop
             }
         }
-        System.out.println("Done in " + runs + " runs!" );
         return output;
     }
 
     /**
-     * TODO: Documentation
+     * This function increases the amount of runs by 1 and makes a new arraylist for this run
      */
     private void newRun() {
         runs++;
@@ -78,7 +79,8 @@ public class RSHeap {
     }
 
     /**
-     * TODO: Documentation
+     * This function is used to remove all the numbers that are currently in the HeapArray and write them to outpuy
+     * It clears the heap
      */
     private void writeHeapToOutput() {
         for (int j = 0; j < heap.getMaxHeapSize(); j++) {                           //Cleaning the heap..
@@ -87,10 +89,10 @@ public class RSHeap {
     }
 
     /**
-     * TODO: Documentation
+     * This function is called when the array is filled with deadspace.
+     * It takes all numbers in the deadspace and puts them in a heap.
      */
     private void buildFromDeadspace() {
-        System.out.println("Rebuilding from deadspace");
         heap.setMaxHeapSize(heap.getDeadspace());                                    //Reset maxHeapSize
         heap.setDeadspace(0);                                                        //Reset deadspace size
         newRun();
