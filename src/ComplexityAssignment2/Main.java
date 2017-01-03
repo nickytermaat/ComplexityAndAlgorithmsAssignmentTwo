@@ -41,6 +41,7 @@ public class Main {
                         }
                         System.out.printf("\n");
                     }
+                    main.runMultiplesorts(500000, 20);
                     break;
                 case 2:
                     System.out.println("* \t " + choice + " Run tests");
@@ -96,11 +97,12 @@ public class Main {
 
     }
 
-    private void runMultiplesorts(int heapSize){
-        for (int j = 0; j < 10; j++) {
+    private void runMultiplesorts(int amountNumbers, int heapSize){
+        double averageSize = 0;
+        double averageRuns = 0;
 
+        for (int j = 0; j < 10; j++) {
             Random rand = new Random();
-            int amountNumbers = rand.nextInt(2000) + 20;
             int[] numbers = new int[amountNumbers];
             for (int i = 0; i < amountNumbers; i++) {
                 numbers[i] = rand.nextInt(2000) -100;
@@ -108,6 +110,7 @@ public class Main {
             RSHeap heap = new RSHeap(heapSize, numbers);
             ArrayList<ArrayList<Integer>> output = heap.replacementSort();
             int runs = output.size();
+            averageRuns += runs;
             int[] runsizes = new int[runs];
             int sum = 0;
             for (int i = 0; i < output.size(); i++) {
@@ -116,8 +119,12 @@ public class Main {
             }
 
             double avg = (sum / runs);
-            System.out.println(amountNumbers + " numbers total");
-            System.out.println(runs + " runs, avg size of " + avg);
+            averageSize += avg;
         }
+        System.out.println("Expected runsize without RS: \t" + heapSize);
+        System.out.println("Average run size with RS: \t\t" + averageSize / 10);
+
+        System.out.println("Expected amount of runs without RS: \t" + (amountNumbers / heapSize));
+        System.out.println("Average amount of runs with RS: \t\t" + averageRuns / 10);
     }
 }
