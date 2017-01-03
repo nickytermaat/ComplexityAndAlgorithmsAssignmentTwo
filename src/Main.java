@@ -9,7 +9,9 @@ import java.util.Scanner;
  */
 public class Main {
     private static int HEAP_SIZE = 10;
+
     public static void main(String[] args) throws IOException {
+        //Assert heapsize
         File file = new File("input.txt");
         Main main = new Main();
         RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
@@ -20,6 +22,7 @@ public class Main {
             }
             System.out.println("\n");
         }
+        //TODO: Pretty-print the output
     }
 
     /**
