@@ -71,6 +71,7 @@ public class Heap {
     }
 
     private void percolateUp(int index){
+        assert index >= 0 : "Invalid index";
         int parent = heapArray[index/2];
         if(parent > heapArray[index] && index != 1){
             heapArray[index / 2] = heapArray[index];
@@ -112,7 +113,7 @@ public class Heap {
     }
 
     int getValue(int index){
-        //TODO: Error handling
+        assert index >= 0 : "Invalid index";
         return heapArray[index];
     }
 
@@ -125,10 +126,12 @@ public class Heap {
      * To create a heaparray with the deadspace values which then can be sorted again
      */
     void setValue(int index, int value){
+        assert index >= 0 : "Invalid index";
         heapArray[index] = value;
     }
 
     void setDeadspace(int deadspace) {
+        assert deadspace >= 0 : "Invalid deadspace size";
         this.deadspace = deadspace;
     }
 
@@ -148,6 +151,7 @@ public class Heap {
     }
 
     void setMaxHeapSize(int maxHeapSize) {
+        assert maxHeapSize >= 0 : "Invalid maximum heap size";
         this.maxHeapSize = maxHeapSize;
     }
 
