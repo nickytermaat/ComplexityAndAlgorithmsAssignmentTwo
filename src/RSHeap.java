@@ -11,7 +11,7 @@ public class RSHeap {
     private ArrayList<ArrayList<Integer>> output;
     private Heap heap;
 
-    RSHeap(int heapSize, int[] unsorted) throws IOException {
+    RSHeap(int heapSize, int[] unsorted){
         //TODO: Assert
         int maxHeapSize;                                                            //HeapSize must be smaller than unsorted length
         if(heapSize <= unsorted.length){

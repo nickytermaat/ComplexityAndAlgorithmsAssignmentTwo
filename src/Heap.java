@@ -98,9 +98,9 @@ public class Heap {
      * Add the number to the deadspace, decrease the maximum heapsize and increase the deadspace
      */
     void addNumberToDeadspace(int number){
-        heapArray[amountOfNumbersInside + 1] = number;
         maxHeapSize--;
         deadspace++;
+        heapArray[maxHeapSize + 1] = number;
     }
 
     int getSmallest(){
@@ -147,6 +147,20 @@ public class Heap {
         this.maxHeapSize = maxHeapSize;
     }
 
+    boolean isOrdered(){
+        for (int i = 1; i < amountOfNumbersInside; i++) {
+            if((i * 2 ) + 1 <= amountOfNumbersInside) {
+                if (heapArray[i] > heapArray[(i * 2)] || heapArray[i] > heapArray[(i * 2) + 1]) {
+                    return false;
+                }
+            } else if (i*2 <= amountOfNumbersInside){
+                if (heapArray[i] > heapArray[(i * 2)]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     public String toString(){
         String toReturn = "";
         for (int i = 0; i < heapArray.length; i++) {
