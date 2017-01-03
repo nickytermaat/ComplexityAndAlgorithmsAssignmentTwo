@@ -23,34 +23,37 @@ public class Main {
         File file = new File("input.txt");
         Main main = new Main();
         main.userInterface();
-        // Ask to run ComplexityAssignment2.test or actual sorting alogrithm
-        // Ask for numbers as input or from file
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                System.out.println("* \t " + choice + " Run sorting algorithm");
-                System.out.println("******************************************************");
-                RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
-                ArrayList<ArrayList<Integer>> output = heap.replacementSort();
-                for (int i = 0; i < output.size(); i++) {
-                    System.out.printf("* \t Run " + (i + 1) + ": ");
-                    for (int j = 0; j < output.get(i).size(); j++) {
-                        System.out.printf(String.valueOf(output.get(i).get(j)) + " ");
+        try {
+            int choice = scanner.nextInt();
+            assert choice == 1 || choice == 2 : "Fill in a correct number";
+            switch (choice) {
+                case 1:
+                    System.out.println("* \t " + choice + " Run sorting algorithm");
+                    System.out.println("******************************************************");
+                    RSHeap heap = new RSHeap(HEAP_SIZE, main.readFromFile(file));
+                    ArrayList<ArrayList<Integer>> output = heap.replacementSort();
+                    for (int i = 0; i < output.size(); i++) {
+                        System.out.printf("* \t Run " + (i + 1) + ": ");
+                        for (int j = 0; j < output.get(i).size(); j++) {
+                            System.out.printf(String.valueOf(output.get(i).get(j)) + " ");
+                        }
+                        System.out.printf("\n");
                     }
-                    System.out.printf("\n");
-                }
-                break;
-            case 2:
-                System.out.println("* \t " + choice + " Run tests");
-                System.out.println("******************************************************");
+                    break;
+                case 2:
+                    System.out.println("* \t " + choice + " Run tests");
+                    System.out.println("******************************************************");
 
-                JUnitCore junit = new JUnitCore();
-                Result resultHeap = junit.run(HeapTest.class);
-                System.out.println("* \t Test ComplexityAssignment2.Heap : Failure count \t" + resultHeap.getFailureCount() );
-                Result resultRSHeap = junit.run(HeapTest.class);
-                System.out.println("* \t Test ComplexityAssignment2.RSHeap : Failure count \t" + resultRSHeap.getFailureCount() );
-                break;
+                    JUnitCore junit = new JUnitCore();
+                    Result resultHeap = junit.run(HeapTest.class);
+                    System.out.println("* \t Test Heap : Failure count \t" + resultHeap.getFailureCount());
+                    Result resultRSHeap = junit.run(HeapTest.class);
+                    System.out.println("* \t Test RSHeap : Failure count \t" + resultRSHeap.getFailureCount());
+                    break;
+            }
+        } catch (InputMismatchException ex) {
+            throw new InputMismatchException("Fill in a number");
         }
 
     }
