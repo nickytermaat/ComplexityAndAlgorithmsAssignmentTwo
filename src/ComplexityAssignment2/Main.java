@@ -4,24 +4,22 @@ import ComplexityAssignment2.test.HeapTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Nicky on 01/12/2016.
  */
 public class Main {
     private static int HEAP_SIZE = 8;
+    private static String INPUT_FILE = "input.txt";
 
     public static void main(String[] args) throws IOException {
         assert HEAP_SIZE >= 1 : "Invalid heap size";
         boolean exit = false;
-        File file = new File("input.txt");
+        File file = new File(INPUT_FILE);
         Main main = new Main();
         Scanner scanner = new Scanner(System.in);
         while(!exit) {
@@ -42,6 +40,7 @@ public class Main {
                             }
                             System.out.printf("\n");
                         }
+                        main.printOutput(INPUT_FILE, new File("output.txt"), output);
                         break;
                     case 2:
                         System.out.println("* \t " + choice + " Run tests");
@@ -57,6 +56,7 @@ public class Main {
                         System.out.println("* \t " + choice + " Run with stats");
                         System.out.println("******************************************************");
                         main.runMultiplesorts(500000, 20);
+
                         break;
                     case 9:
                         exit = true;
@@ -69,7 +69,6 @@ public class Main {
         }
 
     }
-
 
     public void userInterface() {
         System.out.println("******************************************************");
@@ -110,29 +109,32 @@ public class Main {
     }
 
     private void runMultiplesorts(int amountNumbers, int heapSize){
-        double averageSize = 0;
-        double averageRuns = 0;
+        BufferedWriter bw =printDate("stats option", new File("statsoutput.txt"));
+        for (int ind = 0; ind < 10; ind++) {
+            heapSize += 20;
+            double averageSize = 0;
+            double averageRuns = 0;
 
-        for (int j = 0; j < 10; j++) {
-            Random rand = new Random();
-            int[] numbers = new int[amountNumbers];
-            for (int i = 0; i < amountNumbers; i++) {
-                numbers[i] = rand.nextInt(2000) -100;
-            }
-            RSHeap heap = new RSHeap(heapSize, numbers);
-            ArrayList<ArrayList<Integer>> output = heap.replacementSort();
-            int runs = output.size();
-            averageRuns += runs;
-            int[] runsizes = new int[runs];
-            int sum = 0;
-            for (int i = 0; i < output.size(); i++) {
-                runsizes[i] = output.get(i).size();
-                sum += output.get(i).size();
-            }
+            for (int j = 0; j < 10; j++) {
+                Random rand = new Random();
+                int[] numbers = new int[amountNumbers];
+                for (int i = 0; i < amountNumbers; i++) {
+                    numbers[i] = rand.nextInt(2000) -100;
+                }
+                RSHeap heap = new RSHeap(heapSize, numbers);
+                ArrayList<ArrayList<Integer>> output = heap.replacementSort();
+                int runs = output.size();
+                averageRuns += runs;
+                int[] runsizes = new int[runs];
+                int sum = 0;
+                for (int i = 0; i < output.size(); i++) {
+                    runsizes[i] = output.get(i).size();
+                    sum += output.get(i).size();
+                }
 
-            double avg = (sum / runs);
-            averageSize += avg;
-        }
+                double avg = (sum / runs);
+                averageSize += avg;
+            }
         System.out.println("* \t Amount of numbers: \t" + amountNumbers);
         System.out.println("* \t Heap size: \t\t\t" + heapSize + "\n* ");
 
@@ -141,5 +143,57 @@ public class Main {
 
         System.out.println("* \t Expected amount of runs without RS: \t" + (amountNumbers / heapSize));
         System.out.println("* \t Average amount of runs with RS: \t\t" + averageRuns / 10);
+            printStats(bw, heapSize, averageSize, amountNumbers, averageRuns);
+        }
+        try {
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printOutput(String from, File file, ArrayList<ArrayList<Integer>> output){
+        try {
+            Writer writer = printDate(from, file);
+            //TODO: Write run here
+            String line = "";
+
+            for (int i = 0; i < output.size(); i++) {
+                line += "Run: " + i + " with size: " + output.size() + "\n";
+                for (int j = 0; j < output.get(i).size(); j++) {
+                    line += output.get(i).get(j) + ",";
+                }
+                line += "\n";
+                writer.write(line);
+                line = "";
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printStats(BufferedWriter writer, int heapSize, double averageSize, int amountNumbers, double averageRuns) {
+        try {
+            writer.write(heapSize + "\t" + heapSize + "\t" + averageSize / 10 + "\t" + (amountNumbers / heapSize) + "\t" + averageRuns /10 + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private BufferedWriter printDate(String from, File file){
+        try{
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile(), true));
+            Date date = new Date();
+            writer.write("\n Running from "+from+" on " + date + "\n\n");
+            return writer;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
